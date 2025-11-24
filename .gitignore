@@ -5,3 +5,4 @@ __pycache__/
 chroma_db/
 test_failure_screenshot.png
 .DS_Store
+test_checkout.py
