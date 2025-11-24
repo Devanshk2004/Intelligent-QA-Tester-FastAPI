@@ -2,11 +2,22 @@ import os
 import tempfile
 from langchain_community.document_loaders import PyPDFLoader, TextLoader, UnstructuredMarkdownLoader
 from langchain_community.vectorstores import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import BSHTMLLoader
+from dotenv import load_dotenv
 
-embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+load_dotenv()
+
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY not found in .env file")
+
+embedding_model = GoogleGenerativeAIEmbeddings(
+    model="models/text-embedding-004", 
+    google_api_key=api_key
+)
+
 DB_DIR = "chroma_db"
 
 def process_and_store_documents(uploaded_files):

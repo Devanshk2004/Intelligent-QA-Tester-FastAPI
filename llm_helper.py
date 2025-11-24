@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from google import genai 
 from langchain_community.vectorstores import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings 
 
 load_dotenv() 
 
@@ -12,7 +12,16 @@ def get_vector_store():
     """Helper to connect to DB"""
     if not os.path.exists("chroma_db"):
         return None
-    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        print("Error: GEMINI_API_KEY not found.")
+        return None
+
+    embedding_model = GoogleGenerativeAIEmbeddings(
+        model="models/text-embedding-004", 
+        google_api_key=api_key
+    )
     return Chroma(persist_directory="chroma_db", embedding_function=embedding_model)
 
 def ask_bot(query, api_key=None):
@@ -74,20 +83,19 @@ def generate_selenium_script(test_case, html_code, api_key=None):
         ```
         
         REQUIREMENTS:
-        1. **Setup (CRITICAL):** Use `webdriver_manager` with correct Selenium 4 syntax:
+        1. **Setup:** Use `webdriver_manager` with correct Selenium 4 syntax:
            ```python
            from selenium.webdriver.chrome.service import Service
            from webdriver_manager.chrome import ChromeDriverManager
            service = Service(ChromeDriverManager().install())
            driver = webdriver.Chrome(service=service)
            ```
-        2. **Path:** Check if 'checkout.html' is in the current folder OR 'project_assets' folder. Load the one found.
+        2. **Path:** Check if 'checkout.html' is in the current folder OR 'project_assets'.
         
-        3. **Color Assertion (CRITICAL):** Browsers return RGBA values. 
-           When verifying green color, verify it matches ANY of these formats:
+        3. **Color Assertion:** Handle RGBA. Use this logic:
            `if "green" in color or "rgb(0, 128, 0)" in color or "rgba(0, 128, 0, 1)" in color:`
         
-        4. **Slow Motion:** Add `import time` and insert `time.sleep(3)` after every major action (clicking buttons, typing text) so the user can clearly see the demo.
+        4. **Slow Motion:** Add `import time` and insert `time.sleep(3)` after every major action.
         
         5. **Output:** Return ONLY the Python code block.
         """
@@ -96,7 +104,6 @@ def generate_selenium_script(test_case, html_code, api_key=None):
             model=MODEL_NAME, 
             contents=prompt
         )
-        
         return response.text
 
     except Exception as e:
