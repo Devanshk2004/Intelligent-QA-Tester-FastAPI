@@ -1,3 +1,5 @@
+#OPTIONAL FOLDER - GoogleEmbedding
+
 # ☁️ Google Cloud Embeddings (Lightweight Setup)
 
 This folder contains alternative backend logic that uses **Google Generative AI** for text embeddings instead of local Hugging Face models.
