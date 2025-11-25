@@ -9,7 +9,6 @@ load_dotenv()
 MODEL_NAME = "gemini-2.5-flash" 
 
 def get_vector_store():
-    """Helper to connect to DB"""
     if not os.path.exists("chroma_db"):
         return None
     
@@ -25,7 +24,6 @@ def get_vector_store():
     return Chroma(persist_directory="chroma_db", embedding_function=embedding_model)
 
 def ask_bot(query, api_key=None):
-    """Phase 2: Test Case Generation"""
     try:
         client = genai.Client(api_key=api_key)
         vectorstore = get_vector_store()
@@ -62,7 +60,6 @@ def ask_bot(query, api_key=None):
         return f"Error: {str(e)}"
 
 def generate_selenium_script(test_case, html_code, api_key=None):
-    """Phase 3: Selenium Script Generation"""
     try:
         client = genai.Client(api_key=api_key)
         

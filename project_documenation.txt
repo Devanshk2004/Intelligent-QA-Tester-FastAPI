@@ -1,0 +1,78 @@
+Autonomous QA Agent - Technical Documentation
+
+1. Project Overview
+
+The Autonomous QA Agent is an intelligent testing system designed to automate the Software Testing Life Cycle (STLC). It ingests raw project documentation (Product Specs, UI Guides, API Docs) and the target HTML structure to automatically:
+
+:- Create comprehensive, document-grounded Test Cases.
+:- Generate executable Selenium (Python) Scripts to run those tests.
+
+This system utilizes RAG (Retrieval-Augmented Generation) to ensure all test scenarios are strictly based on the provided documentation, eliminating AI hallucinations.
+
+2. System Architecture 
+
+:- Frontend (Streamlit): Handles user inputs (File uploads, Chat, Script Generation requests).
+:- Backend (FastAPI): Processes requests, manages the database, and communicates with the AI.
+:- Knowledge Base (ChromaDB): Stores vectorized chunks of the documentation.
+:- AI Engine (Google Gemini 2.5 Flash): Performs reasoning and code generation.
+
+3. Technical Stack
+
+Streamlit
+FastAPI & Uvicorn
+Google Gemini 2.5 Flash
+LangChain
+ChromaDB
+Google GenAI Embeddings
+Selenium WebDriver
+
+4. Key Features & Capabilities
+
+4.1 :- RAG-Based Knowledge Ingestion
+
+# Multi-Format Support: Ingests PDF, Markdown, JSON, TXT, and HTML.
+# Contextual Awareness: Uses LangChain to chunk documents recursively, ensuring context is preserved.
+# Source Grounding: Every generated test case references the specific source document (e.g., product_specs.md).
+
+4.2 :- Intelligent Test Case Generation
+
+# Generates positive and negative scenarios.
+# Formats output in structured Markdown tables.
+# Validates scenarios against business logic (e.g., Discount logic, Shipping costs).
+
+4.3 :- Autonomous Script Generation
+
+# Context-Aware Coding: The AI reads the actual checkout.html code to identify correct Selectors (ID, XPath, CSS).
+# Self-Healing Setup: Scripts use webdriver-manager to automatically install the correct Chrome Driver version.
+# Smart Path Resolution: Generated scripts automatically detect if the HTML file is in the root folder or project_assets folder.
+# Robust Assertions: Includes logic to verify Colors (RGBA handling) and wait times (time.sleep for demo visibility).
+
+5. API Documentation (Backend)
+
+The FastAPI backend exposes the following endpoints on Port 8000:
+
+:- POST /upload-docs
+
+Purpose: Ingests files into ChromaDB.
+Input: List of files (Multipart).
+Process: Parses text -> Creates Embeddings -> Stores in Vector DB.
+Output: Success status + HTML content string.
+
+:- POST /generate-test-cases
+
+Purpose: Generates a test plan based on a user query.
+Input: JSON {"query": "verify discount code"}.
+Process: Retrieves relevant docs from DB -> Sends prompt to Gemini -> Returns Markdown table.
+
+:- POST /generate-script
+
+Purpose: Writes the Selenium Python code.
+Input: JSON {"test_case": "...", "html_code": "..."}.
+Process: Combines Test Case + Business Rules (from DB) + HTML Structure -> Generates Code.
+
+6. Future Improvements
+
+Dockerization: Containerize the Selenium execution environment to run tests directly on the server.
+History Management: Add persistent chat history for the QA session.
+Report Generation: Automatically generate a PDF report after script execution.
+
