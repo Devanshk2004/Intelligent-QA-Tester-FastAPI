@@ -64,6 +64,7 @@ pip install -r requirements.txt
 ### 4. Configure API Keys
 ---------------------------
 Get your free API Key from Google AI Studio.
+https://aistudio.google.com/
 
 Create a file named **.env** in the root folder.
 
