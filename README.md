@@ -87,3 +87,12 @@ Paste & Save: Paste the code into the file.
 
 python test_checkout.py
 ---------------------------
+
+### 7. For Deployment (Optional)
+
+Make an **start.sh** file and this there :-
+---------------------------
+uvicorn api:app --host 0.0.0.0 --port 8000 &
+streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+---------------------------
+
