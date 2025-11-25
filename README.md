@@ -1,5 +1,7 @@
 # 🤖 Autonomous QA Agent for Test Case and Script Generation
 
+![Project Architecture Flowchart](QA_tester_Flowchart.png)
+
 ## 🚀 Features
 - **Microservices Setup:** Decoupled Architecture using FastAPI (Backend) and Streamlit (Frontend).
 - **Knowledge Base Ingestion:** Uploads PDFs, Markdown, and HTML to create a local vector database (ChromaDB).
