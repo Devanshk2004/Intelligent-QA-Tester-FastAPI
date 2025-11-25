@@ -36,9 +36,6 @@ def health_check():
 
 @app.post("/upload-docs")
 async def upload_documents(files: List[UploadFile] = File(...)):
-    """
-    Receives files, saves them to ChromaDB, returns Status + HTML content.
-    """
     try:
         if os.path.exists("chroma_db"):
             shutil.rmtree("chroma_db")
@@ -57,9 +54,6 @@ async def upload_documents(files: List[UploadFile] = File(...)):
 
 @app.post("/generate-test-cases")
 async def generate_tests(request: QueryRequest):
-    """
-    Receives text query, returns Markdown Table.
-    """
     try:
         api_key = request.api_key if request.api_key else os.getenv("GEMINI_API_KEY")
         response = ask_bot(request.query, api_key)
@@ -69,9 +63,6 @@ async def generate_tests(request: QueryRequest):
 
 @app.post("/generate-script")
 async def generate_script_endpoint(request: ScriptRequest):
-    """
-    Receives Scenario + HTML, returns Python Code.
-    """
     try:
         api_key = request.api_key if request.api_key else os.getenv("GEMINI_API_KEY")
         script = generate_selenium_script(request.test_case, request.html_code, api_key)
