@@ -5,7 +5,7 @@ import zipfile
 import io
 
 st.set_page_config(page_title="Autonomous QA Agent", layout="wide")
-st.title("🤖 Autonomous QA Agent (FastAPI Backend)")
+st.title("🤖 Autonomous QA Agent")
 
 API_URL = "http://localhost:8000"  
 
